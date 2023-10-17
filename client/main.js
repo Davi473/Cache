@@ -1,4 +1,4 @@
-const clientesAdicionados = []
+const clientesAdicionados = [];
 // varial dos valores de stats
 const valoresDeStats = [
     "Novo", "Não Ligar Mais", "Ligar Mais Tarde"
@@ -98,7 +98,7 @@ function addSelect (parent, valores) {
 function excluirCliente(valor) {
     console.log(valor);
     document.getElementById("tabela").remove();
-    fetch("http://localhost:3000/excluir", { method: "post", headers: { "content-type": "application/json" }, body: JSON.stringify({valor:valor})})
+    fetch("http://localhost:3000/excluir", { method: "post", headers: { "content-type": "application/json" }, body: JSON.stringify({valor:valor})});
     clientesAdicionados.splice(valor, valor + 1);
     clientes();
 };
@@ -107,10 +107,8 @@ let tem = false
 // tabelas dos clientes
 async function clientes () {
     if (tem===true) {
-        console.log("ja tem");
     } else {
-        console.log("estou aqui")
-        const resposta = await fetch("http://localhost:3000/valoresDosClientes")
+        const resposta = await fetch("http://localhost:3000/valoresDosClientes");
         const valores = await resposta.json();
         for (const valor of valores) {
             clientesAdicionados.push(valor);
