@@ -15,7 +15,6 @@ app.get("/valoresDosClientes", function (req, res){
 
 app.post("/adicionar", function (req, res) {
     const lancamento = (req.body);
-    console.log(lancamento)
     clientesAdicionados.push(lancamento);
     res.end();
 });
