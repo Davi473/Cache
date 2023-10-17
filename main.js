@@ -1,9 +1,4 @@
-// varial dos clientes
-const clientesAdicionados = [
-    {cliente: "Davi Marcos Dorn", email: "davi###@gmail.com", telefone: "47 995####", stats: "Novo"},
-    {cliente: "Fulano", email: "fulano@gmail.com", telefone: "47 7876####", stats: "Ligar Mais Tarde"}
-];
-
+const clientesAdicionados = []
 // varial dos valores de stats
 const valoresDeStats = [
     "Novo", "Não Ligar Mais", "Ligar Mais Tarde"
@@ -18,10 +13,11 @@ function addCliente () {
     clientesAdicionados.push(
         {cliente: nome.value, email: email.value, telefone: telefone.value, stats: stats.value}
     );
+    fetch("http://localhost:3000/adicionar", { method: "post", headers: { "content-type": "application/json" }, body: JSON.stringify({ cliente: nome.value, email: email.value, telefone: telefone.value, stats: stats.value })})
     nome.value = "";
     email.value = "";
     telefone.value = "";
-    stats.value = "";
+    stats.value = "Novo";
     document.getElementById("tabela").remove();
     clientes();
 }
@@ -99,19 +95,29 @@ function addSelect (parent, valores) {
 };
 
 // Butto Excluir "Excluir o Cliente"
-function excluirCliente (valor) {
+function excluirCliente(valor) {
     console.log(valor);
     document.getElementById("tabela").remove();
+    fetch("http://localhost:3000/excluir", { method: "post", headers: { "content-type": "application/json" }, body: JSON.stringify({valor:valor})})
     clientesAdicionados.splice(valor, valor + 1);
-    console.log(clientesAdicionados);
     clientes();
-        
 };
 
-
-
+let tem = false
 // tabelas dos clientes
-function clientes () {
+async function clientes () {
+    if (tem===true) {
+        console.log("ja tem");
+    } else {
+        console.log("estou aqui")
+        const resposta = await fetch("http://localhost:3000/valoresDosClientes")
+        const valores = await resposta.json();
+        for (const valor of valores) {
+            clientesAdicionados.push(valor);
+        }
+        tem = true
+    }
+    
     // chamando a div id="tabela"
     const tabela =  document.createElement("div");
     tabela.id = "tabela";
@@ -131,7 +137,8 @@ function clientes () {
     addCelulas(tr, "th", "Telefone");
     addCelulas(tr, "th", "Stats");
     addCelulas(tr, "th", "Ação");
-    for (const cliente of clientesAdicionados) {
+    
+    for (const cliente of clientesAdicionados) {        
         // tr de cada cliente
         const tr = document.createElement("tr");
         tr.id = valor;
@@ -169,6 +176,6 @@ function clientes () {
     tudo.appendChild(tabela);
 };
 
+
 cabecalho();
 clientes();
-
